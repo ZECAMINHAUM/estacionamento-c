@@ -39,16 +39,16 @@ void main () {
 		system("clear || cls");
 		menu();
 
+		printf("\nCarros estacionados:\n");
 		vaga = 0;
 		while (vaga < VAGAS) {
-			printf("Vaga %d: %s %.2d:%.2d %.2d/%.2d/%.4d\t", vaga+1, dados[vaga].placa,
-			dados[vaga].hora, dados[vaga].minuto, dados[vaga].dia, dados[vaga].mes, dados[vaga].ano);
 			if (dados[vaga].esta == true) {
-				printf("Estacionado");
+				printf("Vaga %d: %s %.2d:%.2d %.2d/%.2d/%.4d\n", vaga+1, dados[vaga].placa,
+				dados[vaga].hora, dados[vaga].minuto, dados[vaga].dia, dados[vaga].mes, dados[vaga].ano);
 			}
-			printf("\n");
 			vaga++;
 		}
+		printf("---------\n");
 
 		identidade(&atual);
 
@@ -64,9 +64,11 @@ void main () {
 			}
 			vaga++;
 		}
+
+		system("clear || cls");
+
 		if (estacionado == true) {
 			if (confirma("Seu carro se encontra estacionado, deseja sair? (S/N)") == 'S') {
-				printf("Retirada do carro do sistema\n");
 				vaga = 0;
 				while (strcmp(atual.placa, dados[vaga].placa) != 0) {
 					vaga++;
@@ -78,7 +80,6 @@ void main () {
 		} else {
 			if (cheio == false) {
 				if (confirma("Deseja estacionar? (S/N)") == 'S') {
-					printf("Entrada do carro no sistema\n");
 					entrada(&atual);
 
 					vaga = 0;
@@ -102,7 +103,7 @@ void main () {
 	printf("\n");
 }
 void menu () {
-	printf("%c%c BEM VINDO AO ESTACIONAMENTO DO TADEU %c%c\n", 205, 185, 204, 205);
+	printf("\a%c%c BEM VINDO AO ESTACIONAMENTO DO TADEU %c%c\n", 205, 185, 204, 205);
 	printf("\nPRE%cO POR HORA\n 1%c hora: R$ 11,00\n 2%c %c 4%c hora: +R$ 9,00\n Demais horas: +R$ 6,00\n", 128, 166, 166, 133, 166);
 	printf("\nPRE%cO DA DI%cRIA: R$ 46,00\n", 128, 181);
 }
@@ -113,22 +114,35 @@ void identidade(struct tdados *p){
 	fflush(stdin);
 }
 void entrada(struct tdados *p){
-	printf("ENTRADA/SA%cDA\n\n", 214);
-	printf("Hora: ");
-	scanf("%d", &p->hora);
-	fflush(stdin);
-	printf("Minuto: ");
-	scanf("%d", &p->minuto);
-	fflush(stdin);
-	printf("Dia: ");
-	scanf("%d", &p->dia);
-	fflush(stdin);
-	printf("Mes: ");
-	scanf("%d", &p->mes);
-	fflush(stdin);
-	printf("Ano: ");
-	scanf("%d", &p->ano);
-	fflush(stdin);
+	bool errou;
+
+	do {
+		printf("ENTRADA/SA%cDA\n\n", 214);
+		printf("Hora: ");
+		scanf("%d", &p->hora);
+		fflush(stdin);
+		printf("Minuto: ");
+		scanf("%d", &p->minuto);
+		fflush(stdin);
+		printf("Dia: ");
+		scanf("%d", &p->dia);
+		fflush(stdin);
+		printf("Mes: ");
+		scanf("%d", &p->mes);
+		fflush(stdin);
+		printf("Ano: ");
+		scanf("%d", &p->ano);
+		fflush(stdin);
+		if ((p->hora < 0)||(p->hora > 24)||(p->minuto < 0)||(p->minuto > 60)) {
+			if ((p->dia < 1)||(p->dia > 31)||(p->mes < 1)||(p->mes > 12)||(p->ano < 1975)||((p->mes == 2)&(p->dia > 29))) {
+				errou = true;
+				printf("Entrada inv%clida\n", 160);
+				printf("Pressione qualquer tecla para continuar...\n");
+				getchar();
+				system("clear || cls");
+			}
+		}
+	} while(errou == true);
 }
 int bissexto (int ano) {
 	return (ano % 4 == 0) && ((ano % 100 != 0) || (ano % 400 == 0));
@@ -192,7 +206,7 @@ void cobrar(struct tdados *p, struct tdados *q, int dias){
 	}
 
 	dinheiro += dias*46;
-	printf("Voc%c ficou %d dias e %d horas", 136, dias, horas);
+	printf("Voc%c ficou %d dias e %d horas. ", 136, dias, horas);
 	printf("O pre%co a pagar %c de R$ %d,00\n", 135, 130, dinheiro);
 	printf("Agradecemos a prefer%cncia\n", 136);
 }
@@ -208,6 +222,7 @@ char confirma(char message[]){
 			erro = true;
 			printf("Entrada inv%clida\n\nPressione qualquer tecla para continuar...", 160);
 			getchar();
+			system("clear || cls");
 		}
 	}	while (erro == true);
 	return i;

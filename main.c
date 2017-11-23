@@ -162,10 +162,39 @@ int d_dias(struct tdados *p, struct tdados *q){
 	return def_anos - idias + fdias;
 }
 void cobrar(struct tdados *p, struct tdados *q, int dias){
-	int i_tempo = p->minuto, f_hora = q->hora, f_minuto= q->minuto;
-	if () {
-		/* code */
+	int i_tempo = p->minuto + 60*p->hora, f_tempo = q->minuto + 60*q->hora;
+	int horas, i = 1, dinheiro = 0;
+
+	if (f_tempo > i_tempo) {
+		horas = f_tempo - i_tempo;
+	} else if (f_tempo < i_tempo) {
+		horas = 1440 - (i_tempo - f_tempo);
+		dias--;
+	} else {
+		horas = 0;
 	}
+	if (horas % 60 != 0) {
+		horas /= 60;
+		horas++;
+	} else {
+		horas /= 60;
+	}
+	while (horas != 0) {
+		if (i == 1) {
+			dinheiro += 11;
+		} else if (i == 2) {
+			dinheiro += 9;
+		} else if (i > 5){
+			dinheiro += 6;
+		}
+		horas--;
+		i++;
+	}
+
+	dinheiro += dias*46;
+	printf("Voc%c ficou %d dias e %d horas", 136, dias, horas);
+	printf("O pre%co a pagar %c de R$ %d,00\n", 135, 130, dinheiro);
+	printf("Agradecemos a prefer%cncia\n", 136);
 }
 char confirma(char message[]){
 	bool erro = false;
